@@ -40,7 +40,6 @@ def load_documents() -> List[Document]:
     all_docs = []
 
     try:
-        
         for item in os.listdir(DATA_PATH):
             file_path = os.path.join(DATA_PATH, item)
             if file_path.endswith('.pdf'):
@@ -59,6 +58,8 @@ def load_documents() -> List[Document]:
             raise ValueError("\n🟣 Forced exception to try OCR based loader...")
         
     except Exception as e:
+        print("\nException: ", e)
+        
         for file_path in missing_content_muloader:
             if file_path.endswith('.pdf'):
                 ocr_loader = UnstructuredPDFLoader(file_path)

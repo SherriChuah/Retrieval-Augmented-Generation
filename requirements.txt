@@ -3,3 +3,11 @@ langchain_chroma==0.2.4
 langchain_community==0.3.24
 langchain_ollama==0.3.3
 langchain_text_splitters==0.3.8
+pymupdf==1.26.0
+unstructured==0.17.2
+pdfminer.six==20250506
+pi_heif==0.22.0
+unstructured-inference==1.0.2
+pdf2image==1.17.0
+layoutparser==0.3.4
+numpy==1.26.4

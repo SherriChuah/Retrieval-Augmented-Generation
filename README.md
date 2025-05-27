@@ -20,31 +20,39 @@ $ cd Retrieval-Augmented-Generation
 ```
 
 3. Create and activate venv
+```bash
+$ python3.12 -m venv .venv
+$ source .venv/bin/activate  
+```
 
 4. Download requirements and poppler and tesseract
-    - brew install poppler
-    - brew install tesseract
-    - pip install -r requirements.txt
+```bash
+$ brew install poppler
+$ brew install tesseract
+$ pip install -r requirements.txt
+```
+
+5. Have .pdf files of board game instructions in src/data
 
 
-5. Run populate_database.py
+6. Run populate_database.py
 ```bash
 $ python3 -m src.populate_database.populate_database
 ```
 
-5.1. Clear database and repopulate with data (when needed)
+6.1. Clear database and repopulate with data (when needed)
 ```bash
 $ python3 -m src.populate_database.populate_database --reset
 ```
 
-6. Run query file
+7. Run query file
 
 e.g. "How much money does each player get at the start of Monopoly?"
 ```bash
 $ python3 -m src.query {question query in string}
 ```
 
-7. Run test file
+8. Run test file
 ```bash
 $ pytest -W ignore
 ```
