@@ -6,7 +6,7 @@ CHROMA_PATH = "src/chroma"
 
 PROMPT_TEMPLATE = """
 
-Answer the question based only on the following context:
+Answer the question based ONLY on the following context:
 
 {context}
 

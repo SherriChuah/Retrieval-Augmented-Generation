@@ -1,8 +1,9 @@
 import argparse
 import os
 import shutil
+import streamlit as st
 
-from typing import List
+from typing import List, Optional
 
 from langchain_community.document_loaders import PyMuPDFLoader, UnstructuredPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -13,18 +14,18 @@ from src.config import (DATA_PATH, CHROMA_PATH)
 from .embedding_functions import get_embedding_function
 
 
-
 def clear_database() -> None:
     """Clears the chroma database
     """
     print("\n🗑️ Clearing database...")
 
     if os.path.exists(CHROMA_PATH):
+        print("here")
         shutil.rmtree(CHROMA_PATH)
 
 
 # TODO: maybe expand functionality to other file types?
-def load_documents() -> List[Document]:
+def load_documents(selected_documents: Optional[str] = []) -> List[Document]:
     """Loading PDF only documents
 
     Returns:
@@ -33,7 +34,11 @@ def load_documents() -> List[Document]:
     
     print("\n👩🏻‍💻 Loading documents...")
 
-    num_documents = len([f for f in os.listdir(DATA_PATH) if f.lower().endswith('.pdf')])
+    print(selected_documents)
+    print(os.listdir(DATA_PATH))
+
+    num_documents = len([f for f in os.listdir(DATA_PATH) 
+                         if f.lower().endswith('.pdf') and f not in selected_documents])
 
     missing_content_ocr = set()
     missing_content_muloader = set()
@@ -138,7 +143,6 @@ def add_to_chroma(chunks: List[Document]):
     Args:
         chunks (List[Document]): _description_
     """
-
     db = Chroma(
         persist_directory=CHROMA_PATH,
         embedding_function=get_embedding_function()

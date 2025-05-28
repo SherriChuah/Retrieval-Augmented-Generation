@@ -56,3 +56,9 @@ $ python3 -m src.query {question query in string}
 ```bash
 $ pytest -W ignore
 ```
+
+
+9. run streamlit
+```bash
+$ python3 -m streamlit run src/streamlit_app/app.py
+```
