@@ -12,7 +12,7 @@ Answer the question based ONLY on the following context:
 
 ____________
 
-Answer the question based on the above context: {question}
+Answer the question based on the above context, if there are no context, mention 'No information from provided documents.': {question}
 """
 
 EVAL_PROMPT = """

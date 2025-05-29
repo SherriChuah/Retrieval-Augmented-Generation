@@ -25,7 +25,7 @@ def clear_database() -> None:
 
 
 # TODO: maybe expand functionality to other file types?
-def load_documents(selected_documents: Optional[str] = []) -> List[Document]:
+def load_documents(selected_documents: Optional[str] = os.listdir(DATA_PATH)) -> List[Document]:
     """Loading PDF only documents
 
     Returns:
@@ -38,7 +38,7 @@ def load_documents(selected_documents: Optional[str] = []) -> List[Document]:
     print(os.listdir(DATA_PATH))
 
     num_documents = len([f for f in os.listdir(DATA_PATH) 
-                         if f.lower().endswith('.pdf') and f not in selected_documents])
+                         if f.lower().endswith('.pdf') and f in selected_documents])
 
     missing_content_ocr = set()
     missing_content_muloader = set()
@@ -46,15 +46,17 @@ def load_documents(selected_documents: Optional[str] = []) -> List[Document]:
 
     try:
         for item in os.listdir(DATA_PATH):
-            file_path = os.path.join(DATA_PATH, item)
-            if file_path.endswith('.pdf'):
-                loader = PyMuPDFLoader(file_path)
-                docs = loader.load()
-                all_docs.extend(docs)
+            print(item)
+            if item in selected_documents:
+                file_path = os.path.join(DATA_PATH, item)
+                if file_path.endswith('.pdf'):
+                    loader = PyMuPDFLoader(file_path)
+                    docs = loader.load()
+                    all_docs.extend(docs)
 
-                for doc in docs:
-                    if len(doc.page_content.strip()) < 10:
-                        missing_content_muloader.add(doc.metadata["source"])
+                    for doc in docs:
+                        if len(doc.page_content.strip()) < 10:
+                            missing_content_muloader.add(doc.metadata["source"])
             
         if missing_content_muloader:
             print(f"\n🔴 Unloadable pdf sources using PyMuPDFLoader and ratio: \
@@ -66,7 +68,7 @@ def load_documents(selected_documents: Optional[str] = []) -> List[Document]:
         print("\nException: ", e)
         
         for file_path in missing_content_muloader:
-            if file_path.endswith('.pdf'):
+            if file_path.endswith('.pdf') and file_path.split("/")[-1] in selected_documents:
                 ocr_loader = UnstructuredPDFLoader(file_path)
                 docs = ocr_loader.load()
                 all_docs.extend(docs)
@@ -165,6 +167,7 @@ def add_to_chroma(chunks: List[Document]):
     if len(new_chunks):
         print(f"\n🔵 Adding new documents: {len(new_chunks)} chunks")
         new_chunks_ids = [chunk.metadata["id"] for chunk in new_chunks]
+        print("Writable?", os.access(CHROMA_PATH, os.W_OK))
         db.add_documents(new_chunks, ids=new_chunks_ids)
     else:
         print("\n🔴 No new documents added.")
